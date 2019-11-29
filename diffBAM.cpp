@@ -7,7 +7,7 @@ ArgumentParser::ParseResult parseCommandLine(ModifyStringOptions & options,
    ArgumentParser parser("diffBAM");
    setVersion(parser, "0.0.1");
    setDate(parser, "November 2019");
-   addUsageLine(parser, "-i mapped.bam");
+   addUsageLine(parser, "-i mapped1.bam -i mapped2.bam");
    setShortDescription(parser, "diffBAM: compare two or more BAM files.");
 
    addOption(parser, ArgParseOption("i", "input-file",
@@ -42,6 +42,12 @@ int main(int argc, char const ** argv)
    ArgumentParser::ParseResult res = parseCommandLine(options, argc, argv);
    if (res != ArgumentParser::PARSE_OK)
       return res == ArgumentParser::PARSE_ERROR;
+
+   if(options.inputFileName.size() < 2)
+   {
+      cerr << "[ERROR] diffBAM requires more than one BAM file." << endl;
+      return 1;
+   }
 
    for(int i = 0; i < options.inputFileName.size(); i++)
    {
